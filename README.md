@@ -1,1 +1,10 @@
-# single-spa-study
+## 流程梳理
+> 当我们启动应用时，会调用registerApplication注册子应用和start开启应用，这两个方法内部都调用了reroute函数
+
+
+* 其中registerApplication注册子应用，对应用的信息进行配置包裹到apps中
+* start方法执行时通过urlRerouteOnly判断是否要监听url路由变化，然后调用reroute方法
+* 与此同时全局对浏览器的hashchange 和 popstate的触发做一个监听，并通过createPopStateEvent自定义popstate事件的方式对replaceState和pushState进行重写。所以我们通过history.replaceState或者history.pushState本质上还是触发了我们监听的popstate事件，从而触发reroute。
+* reroute方法内部调用getAppChanges，该方法会遍历apps应用数组，根据shouldBeActive方法判断window.location匹配的app激活规则判断子应用是已激活，返回不同状态的应用
+* 然后reroute方法根据started变量的状态走了两个分支，如果started是未开启状态会调用loadApps函数执行app.loadApp来实际加载子应用。再调用callAllEventListeners遍历执行路由收集的函数
+* 如果started是开启状态则调用performAppChanges方法先卸载需要卸载的应用，再执行appsToLoad、appsToMount加载启动挂载应用，期间子应用的生命周期函数会挂载到app配置对象的属性上，在指定的情况下执行
