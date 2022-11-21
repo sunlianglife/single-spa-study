@@ -1,5 +1,8 @@
 ## 流程梳理
-文章链接 https://blog.csdn.net/qq_41534913/article/details/127963038?spm=1001.2014.3001.5501
+> 文章链接 https://blog.csdn.net/qq_41534913/article/details/127963038?spm=1001.2014.3001.5501
+
+当我们启动应用时，会调用registerApplication注册子应用和start开启应用，这两个方法内部都调用了reroute函数
+
 
 * 其中registerApplication注册子应用，对应用的信息进行配置包裹到apps中
 * start方法执行时通过urlRerouteOnly判断是否要监听url路由变化，然后调用reroute方法
